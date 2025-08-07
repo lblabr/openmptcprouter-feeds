@@ -20,6 +20,8 @@ PKG_LICENSE_FILES:=LICENSE-APACHE LICENSE-MIT
 PKG_HOST_ONLY:=1
 PKG_BUILD_FLAGS:=no-mips16
 
+HOST_BUILD_PARALLEL:=0
+
 include $(INCLUDE_DIR)/host-build.mk
 include $(INCLUDE_DIR)/package.mk
 include ./rust-values.mk
