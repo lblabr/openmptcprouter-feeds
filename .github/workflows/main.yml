@@ -8,8 +8,8 @@ jobs:
   build:
     strategy:
       matrix:
-        OMR_TARGET: [z8102ax-emmc]
-        OMR_KERNEL: [6.6]
+        OMR_TARGET: [gl-mt6000, z8109ax_128m]
+        OMR_KERNEL: [6.12]
     runs-on: ubuntu-latest
     continue-on-error: true
 
