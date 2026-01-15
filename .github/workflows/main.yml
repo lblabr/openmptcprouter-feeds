@@ -106,9 +106,9 @@ jobs:
         command: |
           mkdir -p deploy/release/${{env.SOURCE_TAG}}/${{matrix.OMR_TARGET}}
         host: ${{ secrets.OMR_DEPLOY_HOST }}
-        user: deploy
+        user: ${{ secrets.USERNAME }}
         port: ${{ secrets.OMR_DEPLOY_PORT }}
-        key: ${{ secrets.PRIVATE_KEY }}
+        pass: ${{ secrets.PASSWORD }}
         args: -tt
     - if: steps.branch_name.outputs.SOURCE_BRANCH != ''
       name: Deploy - Create directory
