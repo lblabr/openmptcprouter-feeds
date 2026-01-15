@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         OMR_TARGET: [z8102ax-emmc]
-        OMR_KERNEL: [6.12]
+        OMR_KERNEL: [6.6, 6.12]
     runs-on: ubuntu-latest
     continue-on-error: true
 
