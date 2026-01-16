@@ -132,9 +132,9 @@ index 3609630a..c5f364ff 100644
  
      /* connect to port share server */
 +#if defined(ENABLE_MPTCP)   
-+    if ((sd_server = socket(PF_INET, SOCK_STREAM, IPPROTO_MPTCP)) < 0)
++    if ((sd_server = socket(server_addr.addr.sa.sa_family, SOCK_STREAM, IPPROTO_MPTCP)) < 0)
 +#else
-     if ((sd_server = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0)
+     if ((sd_server = socket(server_addr.addr.sa.sa_family, SOCK_STREAM, IPPROTO_TCP)) < 0)
 +#endif
      {
          msg(M_WARN|M_ERRNO, "PORT SHARE PROXY: cannot create socket");
@@ -229,23 +229,14 @@ index fc643c1c..fba2cdc5 100644
      sock->socket_buffer_sizes.rcvbuf = o->rcvbuf;
      sock->socket_buffer_sizes.sndbuf = o->sndbuf;
  
-@@ -2213,7 +2269,7 @@ link_socket_init_phase2(struct context *c)
-         else
- #endif
-         {
--            create_socket(sock, sock->info.lsa->current_remote);
-+	  create_socket(sock, sock->info.lsa->current_remote);
-         }
- 
-     }
 diff --git a/src/openvpn/socket.h b/src/openvpn/socket.h
 index bfc1253b..7009daf0 100644
 --- a/src/openvpn/socket.h
 +++ b/src/openvpn/socket.h
 @@ -121,6 +121,9 @@ struct link_socket_info
-     sa_family_t af;                     /* Address family like AF_INET, AF_INET6 or AF_UNSPEC*/
+     sa_family_t af;  /* Address family like AF_INET, AF_INET6 or AF_UNSPEC*/
      bool bind_ipv6_only;
-     int mtu_changed;            /* Set to true when mtu value is changed */
+     int mtu_changed; /* Set to true when mtu value is changed */
 +#if defined(ENABLE_MPTCP)
 +    bool multipath;
 +#endif
@@ -262,7 +253,7 @@ index bfc1253b..7009daf0 100644
  };
  
  /*
-@@ -469,6 +475,10 @@ bool ipv6_addr_safe(const char *ipv6_text_addr);
+@@ -469,5 +475,9 @@ bool ipv6_addr_safe(const char *ipv6_text_addr);
  
  socket_descriptor_t create_socket_tcp(struct addrinfo *);
  
@@ -270,14 +261,13 @@ index bfc1253b..7009daf0 100644
 +socket_descriptor_t create_socket_mptcp(struct addrinfo *);
 +#endif
 +
- socket_descriptor_t socket_do_accept(socket_descriptor_t sd,
-                                      struct link_socket_actual *act,
+ socket_descriptor_t socket_do_accept(socket_descriptor_t sd, struct link_socket_actual *act,
                                       const bool nowait);
 diff --git a/src/openvpn/multi.c b/src/openvpn/multi.c
 index 6fb9cff2..efee8561 100644
 --- a/src/openvpn/multi.c
 +++ b/src/openvpn/multi.c
-@@ -3406,22 +3406,6 @@ multi_process_incoming_link(struct multi_context *m, struct multi_instance *inst
+@@ -3406,23 +3406,6 @@ multi_process_incoming_link(struct multi_context *m, struct multi_instance *inst
                  {
                      c->c2.to_tun.len = 0;
                  }
@@ -285,14 +275,15 @@ index 6fb9cff2..efee8561 100644
 -                else if (multi_get_instance_by_virtual_addr(m, &src, true) != m->pending)
 -                {
 -                    /* IPv6 link-local address (fe80::xxx)? */
--                    if ( (src.type & MR_ADDR_MASK) == MR_ADDR_IPV6
--                         && IN6_IS_ADDR_LINKLOCAL(&src.v6.addr) )
+-                    if ((src.type & MR_ADDR_MASK) == MR_ADDR_IPV6
+-                        && IN6_IS_ADDR_LINKLOCAL(&src.v6.addr))
 -                    {
 -                        /* do nothing, for now.  TODO: add address learning */
 -                    }
 -                    else
 -                    {
--                        msg(D_MULTI_DROPPED, "MULTI: bad source address from client [%s], packet dropped",
+-                        msg(D_MULTI_DROPPED,
+-                            "MULTI: bad source address from client [%s], packet dropped",
 -                            mroute_addr_print(&src, &gc));
 -                    }
 -                    c->c2.to_tun.len = 0;
