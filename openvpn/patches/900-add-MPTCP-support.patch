@@ -38,18 +38,6 @@ index 16c40bb5..04609ebf 100644
  if test "${with_crypto_library}" = "openssl"; then
  	AC_ARG_VAR([OPENSSL_CFLAGS], [C compiler flags for OpenSSL])
  	AC_ARG_VAR([OPENSSL_LIBS], [linker flags for OpenSSL])
-diff --git a/src/openvpn/init.c b/src/openvpn/init.c
-index d358ad00..6e5b2d3b 100644
---- a/src/openvpn/init.c
-+++ b/src/openvpn/init.c
-@@ -3359,7 +3359,6 @@ do_init_crypto_tls(struct context *c, const unsigned int flags)
- #ifdef ENABLE_DEBUG
-     to.gremlin = c->options.gremlin;
- #endif
--
-     to.plugins = c->plugins;
- 
- #ifdef ENABLE_MANAGEMENT
 diff --git a/src/openvpn/options.c b/src/openvpn/options.c
 index 2c51efa6..dac82a68 100644
 --- a/src/openvpn/options.c
@@ -75,9 +63,10 @@ index 2c51efa6..dac82a68 100644
  #ifndef ENABLE_DCO
      o->tuntap_options.disable_dco = true;
  #endif /* ENABLE_DCO */
-@@ -9475,6 +9480,18 @@ add_option(struct options *options,
+@@ -9475,7 +9480,19 @@ add_option(struct options *options,
              goto err;
          }
+         options->vlan_pvid = (uint16_t)vlan_pvid;
      }
 +#if defined(ENABLE_MPTCP)   
 +    else if (streq(p[0], "mptcp"))
