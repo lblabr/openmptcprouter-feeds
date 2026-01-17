@@ -1,4 +1,4 @@
-name: openmptcprouter2
+name: openmptcprouter
 on: [push]
 
 env:
