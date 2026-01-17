@@ -51,14 +51,14 @@ jobs:
         GITHUB_WORKSPACE: ${{ steps.branch_name.outputs.WORKSPACE }}
       run: |
         git clone $REPO_URL omr
-        if [ "$SOURCE_NAME" != "develop" ]; then
+        if [ "$SOURCE_NAME" != "develop" ] && [ "$SOURCE_NAME" != "openwrt" ] && [ "$SOURCE_NAME" != "main" ] || [ "$SOURCE_NAME" == "" ]; then
           cd omr
           pwd
           git fetch
           git checkout master
         else
           cd omr
-          git checkout develop
+          git checkout $SOURCE_NAME
         fi
         git pull
         pwd
