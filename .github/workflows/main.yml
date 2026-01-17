@@ -8,8 +8,8 @@ jobs:
   build:
     strategy:
       matrix:
-        OMR_TARGET: [z8102ax-emmc, gl-mt6000]
-        OMR_KERNEL: [6.6, 6.12]
+        OMR_TARGET: [z8102ax-emmc]
+        OMR_KERNEL: [6.12]
     runs-on: ubuntu-latest
     continue-on-error: true
 
@@ -72,6 +72,9 @@ jobs:
         OMR_HOST: ${{ secrets.OMR_HOST }}
         OMR_PORT: ${{ secrets.OMR_PORT }}
       run: |
+        find ./feeds/.
+        find ./package/.
+        cat feeds.conf
         OMR_KERNEL="${OMR_KERNEL}" OMR_DIST="${SOURCE_NAME}" OMR_FEED_SRC="${SOURCE_NAME}" sh build.sh prepare {tools,toolchain}/install -j$(nproc) || OMR_KERNEL="${OMR_KERNEL}" OMR_FEED_SRC="${SOURCE_NAME}" sh build.sh prepare {tools,toolchain}/install -j1 V=s
         #echo -e "${{ secrets.OMR_PRIVKEY }}" > $OMR_TARGET/$OMR_KERNEL/source/key-build
         #echo -e "${{ secrets.OMR_PUBKEY }}" > $OMR_TARGET/$OMR_KERNEL/source/key-build.pub
@@ -81,6 +84,8 @@ jobs:
         OMR_TARGET: ${{ matrix.OMR_TARGET }}
         OMR_KERNEL: ${{ matrix.OMR_KERNEL }}
       run: |
+        find ./feeds/.
+        find ./package/.
         make IGNORE_ERRORS=m -C $OMR_TARGET/$OMR_KERNEL/source package/{compile,install,index} -j$(nproc) || make IGNORE_ERRORS=m -C $OMR_TARGET/$OMR_KERNEL/source package/{compile,install,index} -j1 V=s
     - name: Build image
       working-directory: ../../omr
@@ -88,6 +93,8 @@ jobs:
         OMR_TARGET: ${{ matrix.OMR_TARGET }}
         OMR_KERNEL: ${{ matrix.OMR_KERNEL }}
       run: |
+        find ./feeds/.
+        find ./package/.
         make IGNORE_ERRORS=m -C $OMR_TARGET/$OMR_KERNEL/source target/install -j$(nproc) || make IGNORE_ERRORS=m -C $OMR_TARGET/$OMR_KERNEL/source target/install -j1 V=s
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
