@@ -156,7 +156,7 @@ jobs:
         mv ${OMR_TARGET}/${OMR_KERNEL}/source/bin ${GITHUB_WORKSPACE}/
     - if: steps.branch_name.outputs.SOURCE_BRANCH == ''
       name: Deploy - Upload via rsync
-      uses: ysurac/action-rsync@master
+      uses: up9cloud/action-rsync@master
       env:
         VERBOSE: true
         ARGS: -av --delete-after
@@ -172,7 +172,7 @@ jobs:
         GITHUB_WORKSPACE: ${{ steps.branch_name.outputs.WORKSPACE }}
     - if: steps.branch_name.outputs.SOURCE_BRANCH != ''
       name: Deploy - Upload via rsync
-      uses: ysurac/action-rsync@master
+      uses: up9cloud/action-rsync@master
       env:
         VERBOSE: true
         ARGS: -av --delete-after
