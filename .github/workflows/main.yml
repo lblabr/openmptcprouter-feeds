@@ -175,10 +175,10 @@ jobs:
       env:
         ARGS: -av --delete-after
         SOURCE: ./bin/
-        host: ${{ secrets.OMR_DEPLOY_HOST }}
-        user: ${{ secrets.USERNAME }}
-        port: ${{ secrets.OMR_DEPLOY_PORT }}
-        pass: ${{ secrets.PASSWORD }}
+        HOST: ${{ secrets.OMR_DEPLOY_HOST }}
+        USER: ${{ secrets.USERNAME }}
+        PORT: ${{ secrets.OMR_DEPLOY_PORT }}
+        PASSWORD: ${{ secrets.PASSWORD }}
         SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
         SOURCE_BRANCH: ${{ steps.branch_name.outputs.SOURCE_BRANCH }}
         SOURCE_TAG: ${{ steps.branch_name.outputs.SOURCE_TAG }}
