@@ -158,6 +158,7 @@ jobs:
       name: Deploy - Upload via rsync
       uses: ysurac/action-rsync@master
       env:
+        VERBOSE: true
         ARGS: -av --delete-after
         TARGET: deploy/release/${{steps.branch_name.outputs.SOURCE_TAG}}/${{matrix.OMR_TARGET}}
         SOURCE: ./bin/
@@ -173,6 +174,7 @@ jobs:
       name: Deploy - Upload via rsync
       uses: ysurac/action-rsync@master
       env:
+        VERBOSE: true
         ARGS: -av --delete-after
         SOURCE: ./bin/
         HOST: ${{ secrets.OMR_DEPLOY_HOST }}
