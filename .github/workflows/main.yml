@@ -107,8 +107,7 @@ jobs:
         OMR_TARGET: ${{ matrix.OMR_TARGET }}
         OMR_KERNEL: ${{ matrix.OMR_KERNEL }}
       run: |
-        find ./$OMR_TARGET/$OMR_KERNEL/source/feeds
-        find ./$OMR_TARGET/$OMR_KERNEL/source/packages
+        find ./$OMR_TARGET/$OMR_KERNEL/source/package
         cat ./$OMR_TARGET/$OMR_KERNEL/source/feeds.conf
         make IGNORE_ERRORS=m -C $OMR_TARGET/$OMR_KERNEL/source target/install -j$(nproc) || make IGNORE_ERRORS=m -C $OMR_TARGET/$OMR_KERNEL/source target/install -j1 V=s
     - name: Upload artifacts
