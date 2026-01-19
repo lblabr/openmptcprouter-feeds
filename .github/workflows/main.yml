@@ -43,6 +43,9 @@ jobs:
         sudo rm -rf /opt/ghc >/dev/null 2>&1 || true
         sudo docker rmi $(docker images -qf "dangling=true") >/dev/null 2>&1 || true
         df -h
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
+
     - name: cache workdir
       uses: actions/cache@v5.0.1
       env: 
@@ -52,13 +55,13 @@ jobs:
         OMR_HOST: ${{ secrets.OMR_HOST }}
         OMR_PORT: ${{ secrets.OMR_PORT }}
       with:
-        path: ../../
+        path: /workdir
         key: ${{ runner.os }}-workdir-${{ env.OMR_TARGET }}
         restore-keys: |
           ${{ runner.os }}-workdir-${{ env.OMR_TARGET }}
 
     - name: Clone source code
-      working-directory: ../../
+      working-directory: /workdir
       env: 
         REPO_URL: https://github.com/lblabr/openmptcprouter
         SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
@@ -77,7 +80,7 @@ jobs:
         git pull
         pwd
     - name: Build toolchain
-      working-directory: ../../omr
+      working-directory: /workdir/omr
       env:
         OMR_FEED_URL: https://github.com/lblabr/openmptcprouter-feeds
         SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
@@ -93,7 +96,7 @@ jobs:
         ls .
         find .
     - name: Build packages
-      working-directory: ../../omr
+      working-directory: /workdir/omr
       env:
         OMR_TARGET: ${{ matrix.OMR_TARGET }}
         OMR_KERNEL: ${{ matrix.OMR_KERNEL }}
@@ -101,7 +104,7 @@ jobs:
         find .
         make IGNORE_ERRORS=m -C $OMR_TARGET/$OMR_KERNEL/source package/{compile,install,index} -j$(nproc) || make IGNORE_ERRORS=m -C $OMR_TARGET/$OMR_KERNEL/source package/{compile,install,index} -j1 V=s
     - name: Build image
-      working-directory: ../../omr
+      working-directory: /workdir/omr
       env:
         OMR_TARGET: ${{ matrix.OMR_TARGET }}
         OMR_KERNEL: ${{ matrix.OMR_KERNEL }}
@@ -146,7 +149,7 @@ jobs:
         pass: ${{ secrets.PASSWORD }}
         args: -tt
     - name: Move binaries for rsync
-      working-directory: ../../omr
+      working-directory: /workdir/omr
       env:
         OMR_TARGET: ${{ matrix.OMR_TARGET }}
         OMR_KERNEL: ${{ matrix.OMR_KERNEL }}
