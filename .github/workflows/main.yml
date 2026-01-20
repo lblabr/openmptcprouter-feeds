@@ -86,9 +86,10 @@ jobs:
         fi
         git pull
         pwd
-        echo "hash: ${{ hashFiles('/workdir/omr/exist')}}"
+        echo "hash: ${{ hashFiles('/workdir/omr/exist') == '' }}"
+        echo "hash: ${{ hashFiles('/workdir/omr/exist') != '' }}"
 
-    - if: ${{ hashFiles('/workdir/omr/exist') != '' }}
+    - if: ${{ hashFiles('/workdir/omr/exist') == '' }} 
       name: Build toolchain
       working-directory: /workdir/omr
       env:
