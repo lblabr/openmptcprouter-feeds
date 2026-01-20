@@ -87,7 +87,9 @@ jobs:
         fi
         git pull
         pwd
-    - name: Build toolchain
+
+    - if: ${{ hashFiles('/workdir/omr/exist') != '' }}
+      name: Build toolchain
       working-directory: /workdir/omr
       env:
         OMR_FEED_URL: https://github.com/lblabr/openmptcprouter-feeds
