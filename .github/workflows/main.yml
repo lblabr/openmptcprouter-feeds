@@ -88,6 +88,8 @@ jobs:
         git pull
         pwd
 
+        echo "hash: ${{ hashFiles('/workdir/omr/exist')"
+
     - if: ${{ hashFiles('/workdir/omr/exist') != '' }}
       name: Build toolchain
       working-directory: /workdir/omr
@@ -108,6 +110,7 @@ jobs:
         OMR_TARGET: ${{ matrix.OMR_TARGET }}
         OMR_KERNEL: ${{ matrix.OMR_KERNEL }}
       run: |
+        cat /workdir/omr/$OMR_TARGET/$OMR_KERNEL/source/.config
         make IGNORE_ERRORS=m -C $OMR_TARGET/$OMR_KERNEL/source package/{compile,install,index} -j$(nproc) || make IGNORE_ERRORS=m -C $OMR_TARGET/$OMR_KERNEL/source package/{compile,install,index} -j1 V=s
     - name: Build image
       working-directory: /workdir/omr
