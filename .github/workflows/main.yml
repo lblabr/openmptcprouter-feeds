@@ -87,12 +87,12 @@ jobs:
         git pull
         pwd
         ls -a /workdir/omr/exist
-        echo "hash: ${{ hashFiles('./workdir/omr/exist') }}"
-        echo "hash: ${{ hashFiles('./workdir/omr/exist') }}"
-        echo "hash: ${{ hashFiles('./workdir/omr/exist') == '' }}"
-        echo "hash: ${{ hashFiles('./workdir/omr/exist') != '' }}"
+        echo "hash: ${{ hashFiles('/home/runner/work/workdir/omr/exist') }}"
+        echo "hash: ${{ hashFiles('/home/runner/work/workdir/omr/exist') }}"
+        echo "hash: ${{ hashFiles('/home/runner/work/workdir/omr/exist') == '' }}"
+        echo "hash: ${{ hashFiles('/home/runner/work/workdir/omr/exist') != '' }}"
 
-    - if: ${{ hashFiles('/workdir/omr/exist') != '' }} 
+    - if: ${{ hashFiles('/home/runner/work/workdir/omr/exist') != '' }} 
       name: Update .config
       working-directory: /workdir/omr
       env:
@@ -105,7 +105,7 @@ jobs:
       run: |
         OMR_KERNEL="${OMR_KERNEL}" OMR_DIST="${SOURCE_NAME}" OMR_FEED_SRC="${SOURCE_NAME}" ONLY_PREPARE="yes" sh build.sh prepare -j$(nproc) || OMR_KERNEL="${OMR_KERNEL}" OMR_DIST="${SOURCE_NAME}" OMR_FEED_SRC="${SOURCE_NAME}" ONLY_PREPARE="yes" sh build.sh prepare -j1 V=s
 
-    - if: ${{ hashFiles('/workdir/omr/exist') == '' }} 
+    - if: ${{ hashFiles('/home/runner/work/workdir/omr/exist') == '' }} 
       name: Build toolchain
       working-directory: /workdir/omr
       env:
