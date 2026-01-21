@@ -68,7 +68,7 @@ jobs:
         GITHUB_WORKSPACE: ${{ steps.branch_name.outputs.WORKSPACE }}
       run: |
         if [ -d "/workdir/omr" ]; then
-          touch /workdir/omr/exist
+          echo "exist" > /workdir/omr/exist
           cd omr
           git pull
         else
