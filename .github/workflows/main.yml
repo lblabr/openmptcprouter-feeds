@@ -87,10 +87,10 @@ jobs:
         git pull
         pwd
         ls -a /workdir/omr/exist
-        echo "hash: ${{ hashFiles('/workdir/omr/exist') }}"
-        echo "hash: ${{ hashFiles('/workdir/omr/exist') }}"
-        echo "hash: ${{ hashFiles('/workdir/omr/exist') == '' }}"
-        echo "hash: ${{ hashFiles('/workdir/omr/exist') != '' }}"
+        echo "hash: ${{ hashFiles('./workdir/omr/exist') }}"
+        echo "hash: ${{ hashFiles('./workdir/omr/exist') }}"
+        echo "hash: ${{ hashFiles('./workdir/omr/exist') == '' }}"
+        echo "hash: ${{ hashFiles('./workdir/omr/exist') != '' }}"
 
     - if: ${{ hashFiles('/workdir/omr/exist') != '' }} 
       name: Update .config
