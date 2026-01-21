@@ -89,6 +89,19 @@ jobs:
         echo "hash: ${{ hashFiles('/workdir/omr/exist') == '' }}"
         echo "hash: ${{ hashFiles('/workdir/omr/exist') != '' }}"
 
+    - if: ${{ hashFiles('/workdir/omr/exist') != '' }} 
+      name: Update .config
+      working-directory: /workdir/omr
+      env:
+        OMR_FEED_URL: https://github.com/lblabr/openmptcprouter-feeds
+        SOURCE_NAME: ${{ steps.branch_name.outputs.SOURCE_NAME }}
+        OMR_TARGET: ${{ matrix.OMR_TARGET }}
+        OMR_KERNEL: ${{ matrix.OMR_KERNEL }}
+        OMR_HOST: ${{ secrets.OMR_HOST }}
+        OMR_PORT: ${{ secrets.OMR_PORT }}
+      run: |
+        OMR_KERNEL="${OMR_KERNEL}" OMR_DIST="${SOURCE_NAME}" OMR_FEED_SRC="${SOURCE_NAME}" ONLY_PREPARE="yes" sh build.sh prepare -j$(nproc) || OMR_KERNEL="${OMR_KERNEL}" OMR_DIST="${SOURCE_NAME}" OMR_FEED_SRC="${SOURCE_NAME}" ONLY_PREPARE="yes" sh build.sh prepare -j1 V=s
+
     - if: ${{ hashFiles('/workdir/omr/exist') == '' }} 
       name: Build toolchain
       working-directory: /workdir/omr
